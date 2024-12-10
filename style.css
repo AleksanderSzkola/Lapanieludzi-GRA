@@ -30,7 +30,7 @@ body{
     font-size: larger;
     font-weight: bolder;
     color: burlywood;
-    overflow: auto;
+    overflow: hidden;
 }
 #instrukcja{
     position: relative;

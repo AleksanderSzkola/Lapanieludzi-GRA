@@ -106,6 +106,7 @@ function dropElement() {
     const fallInterval = setInterval(() => {
         if(wygrana == 1){
             fallingElement.remove();
+            clearInterval(fallInterval);
         }
         if (position < window.innerHeight) {
             position += 2;

@@ -6,43 +6,43 @@ var liczba2 = document.getElementById("liczba2");
 let posX = 100;
 let posY = 100;
 let wygrana = 0;
-const krok = 50;
+const krok = 15;
 let zmienna = 1;
 let uratowani =0;
 let polegli = 0;
-document.addEventListener("keydown",ruch =>{
-    console.log(event.key);
-    switch (event.key){
-        case 'w':
-            if(posY - krok >= 0){
-                posY -=krok;
-                samolot.style.top = posY+'px';
-                }
-                break;
-        case 's':
-            if(posY + krok <= window.innerHeight - samolot.clientHeight){
-                posY += krok;
-                samolot.style.top = posY+'px';
-            }
-            break;
-        case 'a':
-            if (posX - krok >= 0){ 
-                posX -= krok;
-                samolot.style.left = posX+'px';
-                samolot.style.transform = 'scaleX(-1)';
-            } 
-            break;
-        case 'd':
-            if (posX + krok <= window.innerWidth - samolot.clientWidth){
-                posX += krok; 
-                samolot.style.left = posX+'px';
-                samolot.style.transform = 'scaleX(1)';
-            }
-            break;
+const keys = {};
+
+document.addEventListener("keydown", (event) => {
+    keys[event.key] = true;
+});
+
+document.addEventListener("keyup", (event) => {
+    keys[event.key] = false;
+});
+
+function updatePosition() {
+    if (keys['w'] && posY - krok >= 0) {
+        posY -= krok; // Ruch w górę
+    }
+    if (keys['s'] && posY + krok <= window.innerHeight - samolot.clientHeight) {
+        posY += krok; // Ruch w dół
+    }
+    if (keys['a'] && posX - krok >= 0) {
+        posX -= krok; // Ruch w lewo
+        samolot.style.transform = 'scaleX(-1)'; // Odwrócenie w poziomie
+    }
+    if (keys['d'] && posX + krok <= window.innerWidth - samolot.clientWidth) {
+        posX += krok; // Ruch w prawo
+        samolot.style.transform = 'scaleX(1)'; // Przywrócenie normalnej orientacji
     }
 
+    samolot.style.top = posY + 'px';
+    samolot.style.left = posX + 'px';
 
-});
+    requestAnimationFrame(updatePosition);
+}
+
+updatePosition();
 
 function klikniecie(){
 przycisk.style.visibility= 'hidden'
@@ -64,7 +64,7 @@ const gra = setInterval(() => {
         alert("Niestety Przegrałeś/aś")
         przycisk.style.visibility= 'visible'
         uratowani = 0;
-        polegli =0;
+        polegli = 0;
         wygrana = 1;
         liczba.textContent = "Liczba Uratowanych ludzi: "+uratowani;
         liczba2.textContent = "Liczba ludzi, których nie udało się uratować:"+polegli;
@@ -106,7 +106,7 @@ function dropElement() {
     const fallInterval = setInterval(() => {
         if(wygrana == 1){
             fallingElement.remove();
-            clearInterval(fallInterval);
+		clearInterval(fallInterval);
         }
         if (position < window.innerHeight) {
             position += 2;
@@ -120,10 +120,11 @@ function dropElement() {
             }
 
         } else {
+	    polegli++;
+            liczba2.textContent = "Liczba ludzi, których nie udało się uratować:"+polegli;
             clearInterval(fallInterval);
             fallingElement.remove();
-            polegli++;
-            liczba2.textContent = "Liczba ludzi, których nie udało się uratować:"+polegli;
+            
         }
     }, 20);
 }
